@@ -8,6 +8,7 @@ contract Maintenance {
         uint status;
         uint rev; //revision number
         uint cost;
+        uint usehours;
     }
     
     struct Flight {
@@ -119,8 +120,8 @@ contract Maintenance {
     }
     
     
-    function getPartInfo(uint _planeid,uint index) view public returns (uint,string,uint,uint, uint) {
-        return(airplanes[_planeid].parts[index].partid,airplanes[_planeid].parts[index].manufacturer, airplanes[_planeid].parts[index].status, airplanes[_planeid].parts[index].rev, airplanes[_planeid].parts[index].cost);
+    function getPartInfo(uint _planeid,uint index) view public returns (uint,string,uint,uint, uint,uint) {
+        return(airplanes[_planeid].parts[index].partid,airplanes[_planeid].parts[index].manufacturer, airplanes[_planeid].parts[index].status, airplanes[_planeid].parts[index].rev, airplanes[_planeid].parts[index].cost, airplanes[_planeid].parts[index].usehours);
     }
     
     function setFlight(uint _planeid, string _source, string _destination, uint _travelhours) public onlyOwner  {
@@ -133,6 +134,11 @@ contract Maintenance {
         
         airplanes[_planeid].flights.push(temp);
         airplanes[_planeid].flightcount++;
+        
+        for(uint i=0;i<airplanes[_planeid].partcount;i++) {
+             airplanes[_planeid].parts[i].usehours=airplanes[_planeid].parts[i].usehours+_travelhours;
+        }
+        
         emit addFlight(id, _planeid, _source, _destination, _travelhours);
     }
 
@@ -186,4 +192,5 @@ contract Maintenance {
         }
         return 999;
     }
+    
 }

@@ -1,6 +1,6 @@
 import web3 from './web3';
 
-const address = '0x8eef39fd1742c3ac2a0bf17b7c522f7a576022a2';
+const address = '0xeb6650d21dd10765b2005535501569e55e1285d9';
 
 const abi = [
     {
@@ -268,6 +268,10 @@ const abi = [
         {
           "name": "",
           "type": "string"
+        },
+        {
+          "name": "",
+          "type": "uint256"
         },
         {
           "name": "",

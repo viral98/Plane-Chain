@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import web3 from './web3.js';
 import flights from './flights';
+import PieExample from './pie';
+import {Pie} from 'react-chartjs-2';
 
 class App extends Component {
   constructor(props){
@@ -40,6 +42,9 @@ class App extends Component {
       flightCount: 0,
       insuranceInfo: [],
       flightInsuranceInfo: [],
+      data: {datasets: [], labels: []},
+      manfNameList: [],
+      manfPartPriceList: [],
     };
     
   }
@@ -60,7 +65,9 @@ class App extends Component {
         const airplaneNameList = this.state.airplaneNameList.concat([this.state.airplaneList]);   
         this.setState({airplaneNameList});
     }
-    console.log(this.state.airplaneNameList);
+    
+
+   
 
   }
    componentWillUnmount() {
@@ -131,11 +138,13 @@ class App extends Component {
           
         this.setState({partCount: await flights.methods.getPartCount(this.state.airplaneID).call()});
         
+        //reset state
+        this.setState({ partList: [], partNameList: []  })
         // Getting the part Information
         for (var i = 0; i < this.state.partCount; i++) {
           const partList = await flights.methods.getPartInfo(this.state.airplaneID,i).call();
           this.setState({partList});
-          console.log(this.state.partList);
+          
           const partNameList = this.state.partNameList.concat([this.state.partList]);   
           this.setState({partNameList});
       }
@@ -145,15 +154,57 @@ class App extends Component {
         const flightCount = await flights.methods.getFlightCount(this.state.airplaneID).call();
         this.setState({flightCount});
         
+
+        //reset state
+        this.setState({ flightInfo: [], flightFlownInformation: []  })
         // Getting the Flight Information
         for (var i = 0; i < this.state.flightCount; i++) {
           const flightInfo = await flights.methods.getFlightInfo(this.state.airplaneID,i).call();
           this.setState({flightInfo});
-          console.log(this.state.flightInfo);
+          
           const flightFlownInformation = this.state.flightFlownInformation.concat([this.state.flightInfo]);   
           this.setState({flightFlownInformation});
+
+        // Get Manf details and plot them in a pie chart
+        }
+        
+
+
+
+        // Getting the part Information
+
+        //reset state
+        this.setState({ manfNameList: [], manfPartPriceList: []  })
+        for (var i = 0; i < this.state.partCount; i++) {
+          const partList = await flights.methods.getPartInfo(this.state.airplaneID,i).call();
+          this.setState({partList});
+
+          const manfNameList = this.state.manfNameList.concat([this.state.partList[1]]);
+          const manfPartPriceList = this.state.manfNameList.concat([this.state.partList[4]]);   
+          this.setState({manfNameList,manfPartPriceList });
       }
 
+      console.log(this.state.manfNameList); 
+          const data = {
+                        labels: this.state.manfNameList,
+                        datasets: [{
+                          data: this.state.manfPartPriceList,
+                          backgroundColor: [
+                          '#FF6384',
+                          '#36A2EB',
+                          '#FFCE56'
+                          ],
+                          hoverBackgroundColor: [
+                          '#FF6384',
+                          '#36A2EB',
+                          '#FFCE56'
+                          ]
+                        }]
+          };
+        this.setState({data});
+        console.log("Blah");
+        console.log(this.state.data);
+ 
 
        /* Get Insurance Information for the given plane ID */
         
@@ -164,7 +215,7 @@ class App extends Component {
         for (var i = 0; i < this.state.insuranceCount; i++) {
           const insuranceInfo = await flights.methods.getInsuranceInfo(this.state.airplaneID,i).call();
           this.setState({insuranceInfo});
-          console.log(this.state.insuranceInfo);
+          
           const flightInsuranceInfo = this.state.flightInsuranceInfo.concat([this.state.insuranceInfo]);   
           this.setState({flightInsuranceInfo});
       }
@@ -250,16 +301,15 @@ class App extends Component {
                 <div className="card-body">
                 <hr/>
         
-                <select onChange={event => this.setState({ airplaneID: event.target.value })}>
-                {
-                  this.state.airplaneNameList.map( (airplane,index) =>{
-                  return(
-                  <option value={index+1} key={index}> {airplane[0]} </option>
-                  );
-                }
-                )
+                <select onChange={this.handlePlaneLogs}>
+                  {
+                    this.state.airplaneNameList.map( (airplane,index) =>{
+                      return(
+                        <option value={index+1} key={index}> {airplane[0]}, {index+1} </option>
+                      );
+                    })
                   }
-                </select>
+                  </select>
                 <hr/>
                 </div>
               </div>
@@ -531,20 +581,13 @@ class App extends Component {
             <div className="col-md-6">
               <div className="card">
                 <div className="card-header card-header-primary">
+
                   <h4 className="card-title ">Plane Logs</h4>
                    <p className="card-category"> Select a flight to display Maintanence & Flight Logs</p>
                 </div>
                 <div className="card-body"> 
                 <hr/>
-                  <select onChange={this.handlePlaneLogs}>
-                  {
-                    this.state.airplaneNameList.map( (airplane,index) =>{
-                      return(
-                        <option value={index+1} key={index}> {airplane[0]}, {index+1} </option>
-                      );
-                    })
-                  }
-                  </select>
+                  
                 <hr/>  
                 <table>
                   <tbody>
@@ -614,12 +657,13 @@ class App extends Component {
                     </tr>
                   </tbody>
                 </table>
-
+                 <Pie data={this.state.data} />
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
