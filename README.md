@@ -1,4 +1,4 @@
-This application was created at ETHIndia, Asia's largest Ethereum hackathon, by Team Pythrons (Milind Shah, Pratik Mulchandani, and Viral Tagdiwala).
+This application was created at ETHIndia, Asia's largest Ethereum hackathon by team Pythronz
 
 More efficient aircraft maintenance is how airlines can reduce expenses and improve safety. Blockchain technology can deliver through tracking of every part, recording of accurate data on a unified ledger, and lowering costs through efficiency and lighter administration.
 
@@ -14,3 +14,9 @@ Even more notable is that blockchain can provide details on the entire life cycl
 As of now, mostly disparate systems exist for aircraft parts. Manufacturers have their own records and operators have a different one. This means engineer teams can usually only focus on macro issues, like how long the engine has been in use. With blockchain, they have a clear record of every part, allowing them to pinpoint where an issue may be.
 
 This is why blockchain can make aircraft maintenance not just better, but also more cost-effective. Even engineers who haven't worked on the airline can find out what they need by analyzing the ledger, which includes usage data, configuration, repair history and more in a unified record.
+
+Pythronz consists of:
+-Viral Tagdiwala
+-Milind Shah
+-Pratik Mulchandani
+-Keval Nagda
